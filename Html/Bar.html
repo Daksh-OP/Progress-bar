@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Progress Bar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --radius: 22px;
+      --bar-height: 32px;
+      --primary: #1fa2ff;
+      --secondary: #12d8fa;
+      --accent: #a6ffcb;
+      --glass: rgba(255,255,255,0.16);
+    }
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #232526 0%, #414345 100%);
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #f4f6fb;
+    }
+    .glass-card {
+      background: var(--glass);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);
+      border-radius: var(--radius);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      padding: 44px 38px 38px 38px;
+      min-width: 370px;
+      max-width: 90vw;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: var(--bar-height);
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 32px 0 10px 0;
+      box-shadow: 0 2px 16px 0 rgba(31, 38, 135, 0.08);
+      border: 1px solid rgba(255,255,255,0.11);
+      position: relative;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0;
+      border-radius: var(--radius) 0 0 var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      background: linear-gradient(
+        90deg,
+        var(--primary) 0%,
+        var(--secondary) 50%,
+        var(--accent) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 2.2s linear infinite;
+      box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.14);
+      transition: width 0.38s cubic-bezier(.6,2,.63,1), background-position 0.2s;
+      font-weight: bold;
+      font-size: 1em;
+      color: #fff;
+      letter-spacing: 2px;
+      position: relative;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: 0 0; }
+    }
+    .percent-label {
+      font-size: 1.25em;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin: 10px 0 0 0;
+      color: #c5e2ff;
+      text-shadow: 0 1px 8px #0099ff22;
+      animation: pulse 2s infinite alternate;
+    }
+    @keyframes pulse {
+      from { color: #c5e2ff; }
+      to { color: #a6ffcb; }
+    }
+    .subtle-hint {
+      font-size: 1em;
+      color: #d3f6fb93;
+      margin-top: 25px;
+      font-style: italic;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    .progress-bar-glow {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: var(--radius);
+      box-shadow: 0 0 18px 0 #12d8fa60, 0 0 48px 0 #1fa2ff33;
+      opacity: 0.7;
+      z-index: 1;
+      transition: opacity 0.4s;
+    }
+    .progress-bar-bg:hover .progress-bar-glow {
+      opacity: 1;
+    }
+    .title {
+      font-size: 2.1em;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg,#1fa2ff 30%,#a6ffcb 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 5px;
+      text-shadow: 0 1px 20px #13d8fa33;
+    }
+    .emoji {
+      font-size: 2em;
+      vertical-align: middle;
+      margin-right: 10px;
+      filter: none;
+      text-shadow: 0 2px 6px #1fa2ff22;
+      opacity: 10;
+    }
+    @media (max-width: 480px) {
+      .glass-card { min-width: 90vw; padding: 18px 8px 24px 8px; }
+      .title { font-size: 1.2em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+    <div class="title"><span class="emoji">⏳</span>Progressing Seriously...</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="bar"></div>
+      <div class="progress-bar-glow"></div>
+    </div>
+    <div class="percent-label" id="percent">0%</div>
+    <div class="subtle-hint">
+      Please wait... This might take forever.<br>
+      <span style="font-size:0.9em;opacity:.6;">(Just kidding. It really will.)</span>
+    </div>
+  </div>
+  <script>
+    let percent = 0;
+    function updateBar() {
+      if(percent < 99) {
+        percent++;
+        document.getElementById('bar').style.width = percent + '%';
+        document.getElementById('percent').textContent = percent + '%';
+        setTimeout(updateBar, 40 + Math.floor(Math.random()*60)); // jitter for realism
+      } else {
+        // Stuck at 99% forever!
+        document.getElementById('bar').style.width = '99%';
+        document.getElementById('percent').textContent = '99%';
+      }
+    }
+    updateBar();
+  </script>
+</body>
+</html>
